@@ -58,9 +58,9 @@ jobs:
                 echo "# Auth probz" >> $GITHUB_STEP_SUMMARY
             fi
             echo -e "\n---\n" >> $GITHUB_STEP_SUMMARY
-            echo -e "the raw error:\n\`\`\`\n"
+            echo -e "the raw error:\n\`\`\`\n" >> $GITHUB_STEP_SUMMARY
             echo "$ERROR" >> $GITHUB_STEP_SUMMARY
-            echo -e "\n\`\`\`"
+            echo -e "\n\`\`\`" >> $GITHUB_STEP_SUMMARY
             exit 1  # make the script fail
         fi
         # if main doesn't exist we should make it (new template)
