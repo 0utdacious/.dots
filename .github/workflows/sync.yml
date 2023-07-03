@@ -16,6 +16,7 @@ jobs:
         fetch-depth: 0
     - name: sync
       run: |
+        set -x
         echo "::group::Setup Git"
         echo ">> Actor:${{ github.actor }}"
         git config --global user.name '${{ github.actor }}'
