@@ -16,8 +16,9 @@ jobs:
         fetch-depth: 0
     - name: sync
       run: |
+        # Sync with main
         echo "::group::Setup Git"
-        echo ">> Actor:${{ github.actor }}"
+        echo ">> Actor: ${{ github.actor }}"
         git config --global user.name '${{ github.actor }}'
         git config --global user.email '${{ github.actor }}@users.noreply.github.com'
         echo "::endgroup::"
@@ -57,7 +58,9 @@ jobs:
                 echo "# Auth probz" >> $GITHUB_STEP_SUMMARY
             fi
             echo -e "\n---\n" >> $GITHUB_STEP_SUMMARY
-            echo -e "the raw error: \n ```\n$ERROR\n```" >> $GITHUB_STEP_SUMMARY
+            echo -e "the raw error:\n```\n"
+            echo $ERROR >> $GITHUB_STEP_SUMMARY
+            echo -e "\n```"
             exit 1  # make the script fail
         fi
         # if main doesn't exist we should make it (new template)
