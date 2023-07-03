@@ -59,7 +59,7 @@ jobs:
             fi
             echo -e "\n---\n" >> $GITHUB_STEP_SUMMARY
             echo -e "the raw error:\n```\n"
-            echo $ERROR >> $GITHUB_STEP_SUMMARY
+            echo "$ERROR" >> $GITHUB_STEP_SUMMARY
             echo -e "\n```"
             exit 1  # make the script fail
         fi
