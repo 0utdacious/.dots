@@ -49,23 +49,21 @@ jobs:
         git add --all
         git commit -am "♻️" || echo "resolved"
         # if this failed you probably didn't make workflow changes on template
-        git push
+        ERROR=$(git push 2>&1);
+        # Check if the command succeeded or failed
+        if [[ $? -ne 0 ]]; then  # if the command failed
+            # If a "403" is in the output, then perform the following commands
+            if [[ -n "$ERROR" ]] && echo "$ERROR" | grep -q "403"; then
+                # cat .github/workflow-setup.md >> $GITHUB_STEP_SUMMARY
+                echo "# Auth probz" >> $GITHUB_STEP_SUMMARY
+            fi
+            echo "\n---" >> $GITHUB_STEP_SUMMARY
+            echo "the raw error: $ERROR" >> $GITHUB_STEP_SUMMARY
+            exit 1  # make the script fail
+        fi
         # if main doesn't exist we should make it (new template)
         git rev-parse --verify origin/main || {
-          echo "Here's the failure."
-          ERROR=$(git checkout -b main && git push origin main 2>&1);
-          echo "Ok"
-          # Check if the command succeeded or failed
-          if [[ $? -ne 0 ]]; then  # if the command failed
-              # If a "403" is in the output, then perform the following commands
-              if [[ -n "$ERROR" ]] && echo "$ERROR" | grep -q "403"; then
-                  # cat .github/workflow-setup.md >> $GITHUB_STEP_SUMMARY
-                  echo "# Auth probz" >> $GITHUB_STEP_SUMMARY
-              fi
-              echo "\n---" >> $GITHUB_STEP_SUMMARY
-              echo "the raw error: $ERROR" >> $GITHUB_STEP_SUMMARY
-              exit 1  # make the script fail
-          fi
+          git checkout -b main && git push origin main
           # Auth is good? create the issue.
           gh issue create -a '${{ github.actor }}' -t "finish setting up template" -F ./.github/template_todo.md
         }
