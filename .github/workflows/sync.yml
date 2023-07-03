@@ -51,10 +51,9 @@ jobs:
         git commit -am "♻️" || echo "resolved"
         # if this failed you probably didn't make workflow changes on template
         ERROR=$( (git push  || true) 2>&1);
-        # Check if the command succeeded or failed
-        if [[ $? -ne 0 ]]; then  # if the command failed
-            # If a "403" is in the output, then perform the following commands
-            if [[ -n "$ERROR" ]] && echo "$ERROR" | grep -q "403"; then
+        if [[ -n "$ERROR" ]]; then  # if the command failed
+            # If a "403" is in the output, then auth is not set.
+            if echo "$ERROR" | grep -q "403"; then
                 # cat .github/workflow-setup.md >> $GITHUB_STEP_SUMMARY
                 echo "# Auth probz" >> $GITHUB_STEP_SUMMARY
             fi
